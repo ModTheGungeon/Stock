@@ -1,0 +1,9 @@
+[submodule "libs/MonoMod"]
+	path = libs/MonoMod
+	url = https://github.com/0x0ade/MonoMod
+[submodule "libs/Logger"]
+	path = libs/Logger
+	url = https://github.com/modthegungeon/Logger
+[submodule "libs/Eluant"]
+	path = libs/Eluant
+	url = https://github.com/modthegungeon/Eluant
