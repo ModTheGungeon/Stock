@@ -7,6 +7,7 @@ path="$PWD"
 pushd ~/".local/share/Steam/steamapps/common/Enter the Gungeon/EtG_Data/Managed"
 cp ORIGINAL_UnityEngine.dll UnityEngine.dll
 cp "$path/Stock/bin/Debug/MonoMod.exe" .
+cp "$path/Stock/bin/Debug/MonoMod.RuntimeDetour.dll" .
 cp "$path/Stock/bin/Debug/Mono.Cecil"*".dll" .
 cp "$path/Stock/bin/Debug/UnityEngine.Stock.mm.dll" .
 cp "$path/Stock/bin/Debug/Logger.dll" .

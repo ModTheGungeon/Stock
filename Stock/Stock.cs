@@ -5,6 +5,7 @@ using Eluant;
 using System.Reflection;
 using UnityEngine;
 using Logger = ETGMod.Logger;
+using System.Collections.Generic;
 
 namespace Stock {
     public class Stock : MonoBehaviour {
@@ -81,6 +82,30 @@ namespace Stock {
                 using (var stock_table = LuaState.CreateTable()) {
                     stock_table["_VERSION"] = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
+                    using (var func = LuaState.CreateFunctionFromDelegate(
+                        new Action<LuaTable, LuaFunction>(LuaFunctions.Hook)
+                    )) stock_table["hook"] = func;
+
+                    using (var func = LuaState.CreateFunctionFromDelegate(
+                        new Func<string, AssemblyHelper>(LuaFunctions.Assembly)
+                    )) stock_table["assembly"] = func;
+
+                    using (var func = LuaState.CreateFunctionFromDelegate(
+                        new LuaFunctions.ArrayTypeFuncDelegate(LuaFunctions.ArrayType)
+                    )) stock_table["array_type"] = func;
+
+                    using (var func = LuaState.CreateFunctionFromDelegate(
+                        new Func<Type, LuaTable, LuaClrTypeObject>(LuaFunctions.GenericType)
+                    )) stock_table["generic_type"] = func;
+
+                    using (var func = LuaState.CreateFunctionFromDelegate(
+                        new Func<LuaVararg, object>(LuaFunctions.Get)
+                    )) stock_table["get"] = func;
+
+                    using (var func = LuaState.CreateFunctionFromDelegate(
+                        new Action<LuaVararg>(LuaFunctions.Set)
+                    )) stock_table["set"] = func;
+
                     LuaState.Globals["stock"] = stock_table;
                 }
                 LuaState.DoFile(StockMainLuaPath);
@@ -124,6 +149,7 @@ namespace Stock {
 
         public static void DeinitializeLua() {
             if (Unload != null) SafeExecLua(Unload, "running stock.unload");
+            RuntimeHooks.DeleteAllDetours();
             LuaState.Dispose();
             LuaState = null;
             Unload = null;
@@ -141,9 +167,25 @@ namespace Stock {
         public void Awake() {
             Logger.Debug("Stock GameObject Awake");
             if (Ready != null) SafeExecLua(Ready, "running stock.ready");
+            DontDestroyOnLoad(_GameObject);
+        }
+
+        public void Test(int a) {
+            Logger.Debug($"Hi {a}");
+        }
+
+        private static string StaticTest(string[] x, Dictionary<string, int> dict) {
+            Logger.Debug($"Hi {x[0]}");
+            Logger.Debug($"Hello {dict["a"]}");
+            return x[1];
         }
 
         public void Update() {
+            Test(123);
+            var dict = new Dictionary<string, int> { ["a"] = 3 };
+            var ret = StaticTest(new string[] { "a", "b", "c" }, dict);
+            Logger.Debug($"RET: {ret}");
+            Logger.Debug($"dict[\"a\"]: {dict["a"]}");
             if (Input.GetKeyDown(RELOAD_KEY) && Input.GetKey(RELOAD_MODIFIER)) {
                 Logger.Info("Reloading Lua");
                 InitializeLua();

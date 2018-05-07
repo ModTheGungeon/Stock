@@ -37,10 +37,12 @@
     <Compile Include="Patches\Entry.cs" />
     <Compile Include="Patches\Logger.cs" />
     <Compile Include="Stock.cs" />
-    <Compile Include="LuaBind\LuaMonoBehaviour.cs" />
-    <Compile Include="LuaBind\LuaBasicMonoBehaviour.cs" />
-    <Compile Include="LuaBind\Functions.cs" />
+    <Compile Include="Lua\LuaMonoBehaviour.cs" />
+    <Compile Include="Lua\LuaBasicMonoBehaviour.cs" />
     <Compile Include="Patches\GameObject.cs" />
+    <Compile Include="Lua\LuaFunctions.cs" />
+    <Compile Include="Lua\RuntimeHooks.cs" />
+    <Compile Include="Lua\AssemblyHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libs\Eluant\Eluant\Eluant.csproj">
@@ -55,11 +57,15 @@
       <Project>{8A17C958-5C33-4035-AF76-F94A3AA2DC4F}</Project>
       <Name>MonoMod</Name>
     </ProjectReference>
+    <ProjectReference Include="..\libs\MonoMod\MonoMod.RuntimeDetour\MonoMod.RuntimeDetour.csproj">
+      <Project>{D0C584C0-81D7-486E-B70E-D7F9256E0909}</Project>
+      <Name>MonoMod.RuntimeDetour</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\New Folder\" />
     <Folder Include="Patches\" />
-    <Folder Include="LuaBind\" />
+    <Folder Include="Lua\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
